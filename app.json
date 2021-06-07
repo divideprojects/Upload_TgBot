@@ -1,0 +1,41 @@
+{
+    "name": "Telegram Uploader Bot",
+    "description": "A Telegram Video Watermark Adder Bot in Pyrogram by @Divkix",
+    "keywords": [
+        "telegram",
+        "files",
+        "store",
+        "bot"
+    ],
+    "repository": "https://github.com/Divkix/Upload_TgBot",
+    "website": "https://telegram.dog/Divkix",
+    "success_url": "https://t.me/DivideProjects",
+    "stack": "container",
+    "env": {
+        "API_ID": {
+            "description": "Get this value from my.telegram.org or @TeleORG_Bot"
+        },
+        "API_HASH": {
+            "description": "Get this value from my.telegram.org or @TeleORG_Bot"
+        },
+        "BOT_TOKEN": {
+            "description": "Get this from @BotFather XD"
+        },
+        "OWNER_ID": {
+            "description": "Bot Owner UserID"
+        },
+        "UPDATES_CHANNEL": {
+            "description": "ID of a Channel which you want to do Force Sub to use the bot. Example: -100123456789",
+            "required": false
+        },
+        "LOG_CHANNEL": {
+            "description": "Logs Channel ID for some Tracking XD. Example: -100123456789"
+        }
+    },
+    "formation": {
+        "worker": {
+            "quantity": 1,
+            "size": "free"
+        }
+    }
+}
