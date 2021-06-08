@@ -10,7 +10,6 @@
     "repository": "https://github.com/Divkix/Upload_TgBot",
     "website": "https://telegram.dog/Divkix",
     "success_url": "https://t.me/DivideProjects",
-    "stack": "container",
     "env": {
         "API_ID": {
             "description": "Get this value from my.telegram.org or @TeleORG_Bot"
