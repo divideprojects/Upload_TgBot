@@ -4,6 +4,10 @@ from uploadtgbot import CAPTION, OWNER_ID, SUPPORT_GROUP
 
 
 class Constants:
+    def refresh_stats(user_id: int):
+        return ikb(
+            [[("Upgrade 💰", "upgrade_acct"), ("Refresh 🔄", f"refresh_{user_id}")]],
+        )
 
     START_KB = [
         [

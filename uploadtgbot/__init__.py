@@ -64,5 +64,6 @@ AUTH_CHANNEL = Config.AUTH_CHANNEL
 CAPTION = Config.CAPTION
 OWNER_ID = Config.OWNER_ID
 VERSION = Config.VERSION
+DB_URI = Config.DB_URI
 DOWN_PATH = f"{getcwd()}/uploadtgbot/downloads"
 UPTIME = time()  # Check bot uptime

@@ -14,5 +14,9 @@ class Config:
     SUPPORT_GROUP = load_var("SUPPORT_GROUP", "DivideProjectsDiscussion")
     AUTH_CHANNEL = load_var("AUTH_CHANNEL", -1001218203939)
     OWNER_ID = int(load_var("OWNER_ID", 1198820588))
+    DB_URI = load_var(
+        "DB_URI",
+        "mongodb+srv://upload_tgbot:upload_tgbot@alitamain.itmz5.mongodb.net/upload_tgbot?retryWrites=true&w=majority",
+    )
     CAPTION = load_var("CAPTION", "By @DivideProjects")
     VERSION = load_var("VERSION", "v1.1 - Stable")

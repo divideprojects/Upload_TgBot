@@ -6,20 +6,22 @@ from time import time
 from traceback import format_exc
 
 from pyrogram import filters
-from pyrogram.errors import MessageNotModified
+from pyrogram.errors import FilePartTooBig, MessageNotModified
 from pyrogram.types import Message
 from pySmartDL import SmartDL
 
 from uploadtgbot import DOWN_PATH, LOGGER
 from uploadtgbot.bot_class import UploadTgBot
+from uploadtgbot.db import UserUsage as db
+from uploadtgbot.utils.constants import Constants
 from uploadtgbot.utils.custom_filters import user_check
-from uploadtgbot.utils.direct_dl import DirectDl
 from uploadtgbot.utils.display_progress import humanbytes, progress_for_pyrogram
 
 
 @UploadTgBot.on_message(filters.regex(r"\bhttps?://.*\.\S+") & user_check)
 async def download_files(c: UploadTgBot, m: Message):
     link = m.text
+    userdb = db(m.from_user.id)
     sm = await m.reply_text("Please Wait!\nChecking link...", quote=True)
     user_down = f"{DOWN_PATH}/{m.from_user.id}/"
     try:
@@ -83,30 +85,25 @@ async def download_files(c: UploadTgBot, m: Message):
                     f"Download Speed: {humanbytes(round((total_length/ms), 2))}"
                 ),
             )
-            await c.send_document(
-                m.chat.id,
-                download_file_path,
-                caption="Uploaded by @Upload_TgBot",
-                progress=progress_for_pyrogram,
-                progress_args=("**__Trying to upload...__**", sm, time()),
-            )
-            await sm.delete()
+            userdb.add_download(dbytes=total_length, download=link)
+            try:
+                await c.send_document(
+                    m.chat.id,
+                    download_file_path,
+                    caption="Uploaded by @Upload_TgBot",
+                    reply_markup=Constants.SUPPORT_KB,
+                    progress=progress_for_pyrogram,
+                    progress_args=("**__Trying to upload...__**", sm, time()),
+                )
+                userdb.add_success_or_fail(True)
+                await sm.delete()
+            except FilePartTooBig:
+                await sm.edit_text("Could not upload file!\nSize too big!")
+                return
     except Exception as ef:
         LOGGER.error(ef)
         LOGGER.error(format_exc())
+        userdb.add_success_or_fail(False)
         await sm.edit_text(f"Failed Download!\n{format_exc()}")
         return
-    return
-
-
-@UploadTgBot.on_message(filters.command("direct") & user_check)
-async def direct_link(_, m: Message):
-    args = m.tetx.split()
-    if len(args) == 1:
-        await m.reply_text("PYou also need to send a link along with the command!")
-    else:
-        link = args[1]
-        direct_dl = DirectDl(link).check_url()
-        if direct_dl:
-            await m.reply_text(direct_dl)
     return
