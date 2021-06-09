@@ -6,4 +6,4 @@ run:
 
 clean:
 	@pyclean .
-	@rm -rf uploadtgbot/logs/ uploadtgbot/downloads/
+	@rm -rf uploadtgbot/logs/ uploadtgbot/downloads/ local.db

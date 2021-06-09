@@ -54,7 +54,7 @@ async def progress_for_pyrogram(
                 reply_markup=ikb([[("Cancel ❌", f"cancel_up")]]),
             )
         except MessageNotModified:
-            await sleep(1.5)
+            await sleep(2)
         except Exception as ef:
             LOGGER.error(ef)
             LOGGER.error(format_exc())

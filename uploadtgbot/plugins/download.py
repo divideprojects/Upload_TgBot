@@ -11,19 +11,31 @@ from pyrogram.types import Message
 from pyromod.helpers import ikb
 from pySmartDL import SmartDL
 
-from uploadtgbot import DOWN_PATH, LOGGER
+from uploadtgbot import DOWN_PATH, LOGGER, OWNER_ID
 from uploadtgbot.bot_class import UploadTgBot
 from uploadtgbot.db import LocalDB
 from uploadtgbot.db import UserUsage as db
+from uploadtgbot.utils.caching import USER_CACHE, block_time, user_cache_reload
 from uploadtgbot.utils.constants import Constants
 from uploadtgbot.utils.custom_filters import user_check
-from uploadtgbot.utils.display_progress import humanbytes, progress_for_pyrogram
+from uploadtgbot.utils.display_progress import (
+    TimeFormatter,
+    humanbytes,
+    progress_for_pyrogram,
+)
 
 
 @UploadTgBot.on_message(filters.regex(r"\bhttps?://.*\.\S+") & user_check)
 async def download_files(c: UploadTgBot, m: Message):
-    link = m.text
     user_id = m.from_user.id
+    if m.from_user.id != OWNER_ID and m.from_user.id in set(list(USER_CACHE.keys())):
+        await m.reply_text(
+            "Spam protection active!\n"
+            f"Please try again after {TimeFormatter((((USER_CACHE[m.from_user.id]+block_time)-time.time())*1000))} minutes",
+        )
+        return
+
+    link = m.text
     LocalDB.set(f"dl_{user_id}", True)
     userdb = db(user_id)
     sm = await m.reply_text("Please Wait!\nChecking link...", quote=True)
@@ -40,6 +52,7 @@ async def download_files(c: UploadTgBot, m: Message):
         download_file_path = path.join(user_down, custom_file_name)
         downloader = SmartDL(url, download_file_path, progress_bar=False)
         downloader.start(blocking=False)
+        await user_cache_reload(m)
         c_time = time()
         while not downloader.isFinished():
             # Cancel the download task
@@ -68,7 +81,7 @@ async def download_files(c: UploadTgBot, m: Message):
             try:
                 current_message = (
                     f"__**Trying to download...**__\n"
-                    f"**URL:** `{link}`\n"
+                    f"**URL:** `{url}`\n"
                     f"**File Name:** `{custom_file_name}`\n"
                     f"{progress_str}\n"
                     f"__{humanbytes(downloaded)} of {humanbytes(total_length)}__\n"
@@ -86,7 +99,7 @@ async def download_files(c: UploadTgBot, m: Message):
                         disable_web_page_preview=True,
                     )
                     display_message = current_message
-                    await sleep(1.5)
+                    await sleep(2)
             except MessageNotModified:  # Don't log error if Message is not modified
                 pass
             except Exception as ef:
