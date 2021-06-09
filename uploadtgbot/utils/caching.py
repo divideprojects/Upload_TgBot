@@ -17,10 +17,9 @@ USER_CACHE = TTLCache(maxsize=512, ttl=(block_time), timer=perf_counter)
 async def user_cache_reload(m: Message or CallbackQuery):
     global USER_CACHE
     with THREAD_LOCK:
-        if isinstance(m, CallbackQuery):
-            m = m.message
-        USER_CACHE[m.from_user.id] = time()
+        user_id = m.from_user.id
+        USER_CACHE[user_id] = time()
         LOGGER.info(
-            f"Restricting {m.from_user.first_name} for {block_time}s",
+            f"Restricting {user_id} for {block_time}s",
         )
         return
