@@ -23,7 +23,7 @@
         },
         "OWNER_ID": {
             "description": "Bot Owner UserID"
-        },
+        }
     },
     "formation": {
         "worker": {
