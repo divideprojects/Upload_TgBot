@@ -72,7 +72,7 @@ async def download_files(c: UploadTgBot, m: Message):
             diff = now - c_time
             percentage = downloader.get_progress() * 100
             speed = downloader.get_speed(human=True)
-            progress_str = "**[{}{}]**\n**Progress:** __{}%__".format(
+            progress_str = "<b>[{}{}]</b>\n<b>Progress:</b> <i>{}%</i>".format(
                 "".join(["●" for _ in range(floor(percentage / 5))]),
                 "".join(["○" for _ in range(20 - floor(percentage / 5))]),
                 round(percentage, 2),
@@ -80,13 +80,13 @@ async def download_files(c: UploadTgBot, m: Message):
             estimated_total_time = downloader.get_eta(human=True)
             try:
                 current_message = (
-                    f"__**Trying to download...**__\n"
-                    f"**URL:** `{url}`\n"
-                    f"**File Name:** `{custom_file_name}`\n"
-                    f"{progress_str}\n"
-                    f"__{humanbytes(downloaded)} of {humanbytes(total_length)}__\n"
-                    f"**Speed:** __{speed}__\n"
-                    f"**ETA:** __{estimated_total_time}__"
+                    f"<i><b>Trying to download...</b></i>\n"
+                    f"<b>URL:</b> <i>{url}</i>\n"
+                    f"<b>File Name:<b> <i>{custom_file_name}</i>\n"
+                    f"<i>{progress_str}</i>\n"
+                    f"<i>{humanbytes(downloaded)} of {humanbytes(total_length)}</i>\n"
+                    f"<b>Speed:</b> <i>{speed}</i>\n"
+                    f"<b>ETA:</b> <i>{estimated_total_time}</i>"
                 )
                 if round(diff % 10.00) == 0 and current_message != display_message:
                     # Cancel the Download process
@@ -117,10 +117,17 @@ async def download_files(c: UploadTgBot, m: Message):
             LocalDB.set(f"up_{user_id}", True)
             userdb.add_download(dbytes=total_length, download=link)
             try:
+                file_size = path.getsize(download_file_path)
+                caption = (
+                    f"<b>File Name:</b> <i>{custom_file_name}</i>"
+                    f"\n<b>File Size</b> <i>{humanbytes(file_size)}</i>"
+                    f"\n<b>URL:</b> {url}"
+                    "\n\nUploaded by @Upload_TgBot"
+                )
                 await c.send_document(
                     m.chat.id,
                     download_file_path,
-                    caption="Uploaded by @Upload_TgBot",
+                    caption=caption,
                     reply_markup=Constants.SUPPORT_KB,
                     progress=progress_for_pyrogram,
                     progress_args=(

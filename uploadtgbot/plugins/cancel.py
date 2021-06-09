@@ -18,4 +18,4 @@ async def cancel_operation(_, q: CallbackQuery):
         LocalDB.set(f"dl_{user_id}", False)
         q_answer = "Cancelled Download Task!"
 
-    await q.answer(q_answer, show_alert=True)
+    await q.answer(q_answer)
