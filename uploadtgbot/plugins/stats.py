@@ -39,3 +39,8 @@ async def refresh_stats(_, q: CallbackQuery):
     except MessageNotModified:
         pass
     await q.answer()
+
+
+@UploadTgBot.on_callback_query(filters.regex("^upgrade_acct"))
+async def upgrade_acct(_, q: CallbackQuery):
+    await q.answer("Not yet supported!", show_alert=True)

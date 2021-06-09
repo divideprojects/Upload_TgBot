@@ -17,38 +17,38 @@ class MongoDB:
         self.collection = self._db[collection]
 
     # Insert one entry into collection
-    def __insert_one(self, document):
+    def insert_one(self, document):
         result = self.collection.insert_one(document)
         return repr(result.inserted_id)
 
     # Find one entry from collection
-    def __find_one(self, query):
+    def find_one(self, query):
         result = self.collection.find_one(query)
         if result:
             return result
         return False
 
     # Find entries from collection
-    def __find_all(self, query=None):
+    def find_all(self, query=None):
         if query is None:
             query = {}
         findall_res = [document for document in self.collection.find(query)]
         return findall_res
 
     # Count entries from collection
-    def __count(self, query=None):
+    def count(self, query=None):
         if query is None:
             query = {}
         return self.collection.count_documents(query)
 
     # Delete entry/entries from collection
-    def __delete_one(self, query):
+    def delete_one(self, query):
         self.collection.delete_many(query)
         after_delete = self.collection.count_documents({})
         return after_delete
 
     # Replace one entry in collection
-    def __replace(self, query, new_data):
+    def replace(self, query, new_data):
         old = self.collection.find_one(query)
         _id = old["_id"]
         self.collection.replace_one({"_id": _id}, new_data)
@@ -56,15 +56,15 @@ class MongoDB:
         return old, new
 
     # Update one entry from collection
-    def __update(self, query, update):
+    def update(self, query, update):
         result = self.collection.update_one(query, {"$set": update})
         new_document = self.collection.find_one(query)
         return result.modified_count, new_document
 
-    def __db_command(self, command):
+    def db_command(self, command):
         return self._db.command(command)
 
-    def __close(self):
+    def close(self):
         return self._client.close()
 
 
