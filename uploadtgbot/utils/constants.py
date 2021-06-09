@@ -44,6 +44,7 @@ I can download files from a URL, just me a link to see what I can do!
 /start: <i>Start the bot.</i>
 /help: <i>Show this message.</i>
 /direct (url here): <i>Give you the direct links of supported urls</i>
+/stats: <i>Get your current Stats</i>
 -> Check next page for more details
 
 Just send me a direct download link and I will send the file to you!
