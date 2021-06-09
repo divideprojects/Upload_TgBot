@@ -31,7 +31,7 @@ async def download_files(c: UploadTgBot, m: Message):
     if m.from_user.id != OWNER_ID and m.from_user.id in set(list(USER_CACHE.keys())):
         await m.reply_text(
             "Spam protection active!\n"
-            f"Please try again after {TimeFormatter((((USER_CACHE[m.from_user.id]+block_time)-time.time())*1000))} minutes",
+            f"Please try again after {TimeFormatter((((USER_CACHE[m.from_user.id]+block_time)-time())*1000))} minutes",
         )
         return
 
