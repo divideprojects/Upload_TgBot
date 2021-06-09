@@ -3,12 +3,26 @@ from time import sleep, time
 from traceback import format_exc
 
 from pyrogram.errors import MessageNotModified
+from pyromod.helpers import ikb
 
 from uploadtgbot import LOGGER
+from uploadtgbot.db import LocalDB
 from uploadtgbot.utils.constants import Constants
 
 
-async def progress_for_pyrogram(current, total, ud_type, message, start):
+async def progress_for_pyrogram(
+    current,
+    total,
+    ud_type,
+    message,
+    start,
+    user_id,
+    client,
+):
+    if not LocalDB.get(f"up_{user_id}"):
+        await message.reply_text("Cancelled Upload Task!")
+        await client.stop_transmission()
+        return
     now = time()
     diff = now - start
     if round(diff % 10.00) == 0 or current == total:
@@ -34,7 +48,11 @@ async def progress_for_pyrogram(current, total, ud_type, message, start):
             estimated_total_time if estimated_total_time != "" else "0 s",
         )
         try:
-            await message.edit(text=f"<b>{ud_type}</b>\n\n{tmp}")
+            # Cancel the upload process
+            await message.edit_text(
+                text=f"<b>{ud_type}</b>\n\n{tmp}",
+                reply_markup=ikb([[("Cancel ❌", f"cancel_up")]]),
+            )
         except MessageNotModified:
             await sleep(1.5)
         except Exception as ef:
