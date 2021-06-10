@@ -113,7 +113,7 @@ class UserUsage(MongoDB):
         all_data = collection.find_all()
         total_usage = sum([i["usage"] for i in all_data])
         total_users = collection.count()
-        total_downloads = 0
+        total_downloads = sum([len(i["downloads"]) for i in all_data])
         return (
             "<b><i>Stats</i></b>"
             f"\n<b>Total Users:</b>{total_users}"
