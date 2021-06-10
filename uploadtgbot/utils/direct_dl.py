@@ -4,12 +4,15 @@ from urllib.parse import unquote
 from bs4 import BeautifulSoup
 from httpx import get
 
+from uploadtgbot.utils.display_progress import humanbytes
+from uploadtgbot.utils.mega_dl import download_file
+
 
 class DirectDl:
     def __init__(self, url: str):
         self.url = url
 
-    def check_url(self):
+    async def check_url(self):
         if ("sourceforge.net") in self.url:
             return self.sourceforge()
         elif "drive.google.com" in self.url:
@@ -22,6 +25,10 @@ class DirectDl:
             return self.osdn()
         elif "github.com" in self.url:
             return self.github()
+        elif "mega.nz" or "mega.co.nz" in self.url:
+            tmp = await download_file(self.url)
+            name, size, link = tmp[0], tmp[1], tmp[2]
+            return f"<b>Filename:</b> {name}\n<b>Size: {humanbytes(size)}</b>\n<b>Link:</b>\n{link}"
         else:
             return ""
 

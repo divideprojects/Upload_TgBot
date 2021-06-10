@@ -82,7 +82,7 @@ async def download_files(c: UploadTgBot, m: Message):
                 current_message = (
                     f"<i><b>Trying to download...</b></i>\n"
                     f"<b>URL:</b> <i>{url}</i>\n"
-                    f"<b>File Name:<b> <i>{custom_file_name}</i>\n"
+                    f"<b>File Name:</b> <i>{custom_file_name}</i>\n"
                     f"<i>{progress_str}</i>\n"
                     f"<i>{humanbytes(downloaded)} of {humanbytes(total_length)}</i>\n"
                     f"<b>Speed:</b> <i>{speed}</i>\n"

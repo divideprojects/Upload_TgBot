@@ -62,6 +62,7 @@ You can get the direct links by using this syntax: <code>/direct (url here)</cod
 - <a href='https://disk.yandex.com'><i>Yandex</i></a>
 - <a href='https://sourceforge.com'><i>Sourceforge</i></a>
 - <a href='https://osdn.net'><i>OSDN</i></a>
+- <a href='https://mega.nz'><i>Mega</i></a>
 """
 
     page3_help = f"""
