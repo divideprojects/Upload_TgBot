@@ -10,7 +10,8 @@ RUN apt update && apt upgrade -y && \
     python3-dev \
     python3-lxml \
     make \
-    git
+    git \
+    gcc
 
 # Make image lighter
 RUN rm -rf /var/lib/apt/lists /var/cache/apt/archives /tmp
