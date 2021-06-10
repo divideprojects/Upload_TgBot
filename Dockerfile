@@ -24,7 +24,7 @@ COPY . .
 # Install dependencies
 RUN pip3 install --upgrade pip
 RUN rm -r /opt/bitnami/python/lib/python3.9/site-packages/setuptools*
-RUN pip3 install --upgrade setuptools
+RUN pip3 install --upgrade setuptools wheel
 
 # Install poetry
 RUN pip3 install --upgrade poetry==1.1.6
