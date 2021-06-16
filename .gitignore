@@ -6,6 +6,7 @@ uploadtgbot/logs/
 uploadtgbot/downloads/
 uploadtgbot/local_vars.py
 local.db
+.idea/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
