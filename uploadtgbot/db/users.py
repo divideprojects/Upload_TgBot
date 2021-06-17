@@ -12,12 +12,12 @@ class Users(MongoDB):
         self.user_id = user_id
         self.user_info = self.__ensure_in_db()
 
-    def add_download(self, dbytes: int, download: str):
+    async def add_download(self, dbytes: int, download: str):
         self.user_info["usage"] += dbytes
         self.user_info["downloads"].append(download)
-        return self.update({"_id": self.user_id}, self.user_info)
+        return await self.update({"_id": self.user_id}, self.user_info)
 
-    def get_info(self) -> str:
+    async def get_info(self) -> str:
         user = self.user_info
         return (
             "<b><i>Stats</i></b>"
@@ -28,36 +28,36 @@ class Users(MongoDB):
         )
 
     @staticmethod
-    def change_restriction(user_id: int, time: int):
+    async def change_restriction(user_id: int, time: int):
         collection = MongoDB(Users.db_name)
-        user_info = collection.find_one({"_id": user_id})
+        user_info = await collection.find_one({"_id": user_id})
         user_info["restriction"] = time
-        return collection.update({"_id": user_id}, user_info)
+        return await collection.update({"_id": user_id}, user_info)
 
     @staticmethod
-    def change_plan(user_id: int, plan: str):
+    async def change_plan(user_id: int, plan: str):
         collection = MongoDB(Users.db_name)
-        user_info = collection.find_one({"_id": user_id})
+        user_info = await collection.find_one({"_id": user_id})
         user_info["plan"] = plan
-        return collection.update({"_id": user_id}, user_info)
+        return await collection.update({"_id": user_id}, user_info)
 
     @staticmethod
-    def get_all_users():
-        return MongoDB(Users.db_name).find_all()
+    async def get_all_users():
+        return await MongoDB(Users.db_name).find_all()
 
     @staticmethod
-    def total_users_count():
-        return MongoDB(Users.db_name).count()
+    async def total_users_count():
+        return await MongoDB(Users.db_name).count()
 
     @staticmethod
-    def delete_user(user_id: int):
-        return MongoDB(Users.db_name).delete_one({"_id": user_id})
+    async def delete_user(user_id: int):
+        return await MongoDB(Users.db_name).delete_one({"_id": user_id})
 
     # this needs some fixing
     @staticmethod
-    def get_all_usage() -> str:
+    async def get_all_usage() -> str:
         collection = MongoDB(Users.db_name)
-        all_data = collection.find_all()
+        all_data = await collection.find_all()
         total_usage = sum(i["usage"] for i in all_data)
         total_users = collection.count()
         total_downloads = sum(len(i["downloads"]) for i in all_data)
