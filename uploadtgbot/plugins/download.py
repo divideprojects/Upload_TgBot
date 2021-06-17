@@ -2,9 +2,11 @@ from asyncio import sleep
 from datetime import datetime
 from math import floor
 from os import path, remove
+from re import findall
 from time import time
 from traceback import format_exc
 
+from httpx import get,RequestError
 from pySmartDL import SmartDL
 from pyrogram import filters
 from pyrogram.errors import FilePartTooBig, MessageNotModified
@@ -42,13 +44,16 @@ async def download_files(c: UploadTgBot, m: Message):
     user_down = f"{DOWN_PATH}/{user_id}/"
     try:
         start_t = datetime.now()
-        custom_file_name = path.basename(link)
         if "|" in link:
             url, custom_file_name = link.split("|")
             url = url.strip()
             custom_file_name = custom_file_name.strip()
         else:
             url = link
+            try:
+                custom_file_name = findall("filename=(.+)", get(url).headers['content-disposition'])[0]
+            except RequestError:
+                custom_file_name = path.basename(link)
         download_file_path = path.join(user_down, custom_file_name)
         downloader = SmartDL(url, download_file_path, progress_bar=False)
         downloader.start(blocking=False)
@@ -60,10 +65,10 @@ async def download_files(c: UploadTgBot, m: Message):
                 downloader.stop()
                 await sm.edit_text("Task Cancelled by User!")
                 return
-            total_length = downloader.filesize if downloader.filesize else None
-            if total_length > 2097152000:
+            total_length = downloader.filesize or 0
+            if total_length != 0 and total_length > 2097152000:  # size less than 2gb
                 await sm.edit_text(
-                    "Cannot download files more than 2 GB because of Telegram restrictions!",
+                    "Cannot download files more than 2 GB because of Telegram restrictions!"
                 )
                 return
             downloaded = downloader.get_dl_size()
@@ -73,10 +78,11 @@ async def download_files(c: UploadTgBot, m: Message):
             percentage = downloader.get_progress() * 100
             speed = downloader.get_speed(human=True)
             progress_str = "<b>[{}{}]</b>\n<b>Progress:</b> <i>{}%</i>".format(
-                "".join(["●" for _ in range(floor(percentage / 5))]),
-                "".join(["○" for _ in range(20 - floor(percentage / 5))]),
+                "".join("●" for _ in range(floor(percentage / 5))),
+                "".join("○" for _ in range(20 - floor(percentage / 5))),
                 round(percentage, 2),
             )
+
             estimated_total_time = downloader.get_eta(human=True)
             try:
                 current_message = (
@@ -98,7 +104,6 @@ async def download_files(c: UploadTgBot, m: Message):
                         reply_markup=ikb([[("Cancel ❌", "cancel_dl")]]),
                         disable_web_page_preview=True,
                     )
-                    display_message = current_message
                     await sleep(2)
             except MessageNotModified:  # Don't log error if Message is not modified
                 pass
