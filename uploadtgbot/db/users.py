@@ -2,7 +2,6 @@ from datetime import date
 
 from uploadtgbot import LOGGER
 from uploadtgbot.db.mongo import MongoDB
-from uploadtgbot.utils.display_progress import humanbytes
 
 
 class Users(MongoDB):
@@ -84,3 +83,14 @@ class Users(MongoDB):
             LOGGER.info(f"Initialized New User: {self.user_id}")
             return new_data
         return user_data
+
+def humanbytes(size: int or str):
+    if not size:
+        return ""
+    power = 2 ** 10
+    n = 0
+    Dic_powerN = {0: " ", 1: "Ki", 2: "Mi", 3: "Gi", 4: "Ti"}
+    while size > power:
+        size /= power
+        n += 1
+    return str(round(size, 2)) + " " + Dic_powerN[n] + "B"
