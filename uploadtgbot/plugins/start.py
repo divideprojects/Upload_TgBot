@@ -4,7 +4,6 @@ from pyromod.helpers import ikb
 
 from uploadtgbot import PREFIX_HANDLER
 from uploadtgbot.bot_class import UploadTgBot
-from uploadtgbot.db import UserUsage as db
 from uploadtgbot.utils.constants import Constants
 from uploadtgbot.utils.custom_filters import user_check
 
@@ -13,7 +12,6 @@ from uploadtgbot.utils.custom_filters import user_check
     filters.command("start", PREFIX_HANDLER) & filters.private & user_check,
 )
 async def start_bot(_, m: Message):
-    _ = db(m.from_user.id)
     await m.reply_text(
         Constants.USAGE_WATERMARK_ADDER.format(m.from_user.first_name),
         reply_markup=ikb(Constants.START_KB),
@@ -26,7 +24,6 @@ async def start_bot(_, m: Message):
     filters.command("help", PREFIX_HANDLER) & filters.private & user_check,
 )
 async def help_bot(_, m: Message):
-    _ = db(m.from_user.id)
     await m.reply_text(
         Constants.page1_help,
         reply_markup=ikb(Constants.page1_help_kb),

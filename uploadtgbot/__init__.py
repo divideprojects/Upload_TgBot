@@ -46,7 +46,6 @@ except Exception as ef:
     LOGGER.error(format_exc())
     sysexit(1)
 
-
 LOGGER.info("------------------------")
 LOGGER.info("|     Upload_TgBot     |")
 LOGGER.info("------------------------")

@@ -4,7 +4,7 @@ from pyrogram.types import CallbackQuery, Message
 
 from uploadtgbot import OWNER_ID, PREFIX_HANDLER
 from uploadtgbot.bot_class import UploadTgBot
-from uploadtgbot.db import UserUsage as db
+from uploadtgbot.db import Users as db
 from uploadtgbot.utils.constants import Constants
 from uploadtgbot.utils.custom_filters import user_check
 

@@ -5,16 +5,16 @@ from os import path, remove
 from time import time
 from traceback import format_exc
 
+from pySmartDL import SmartDL
 from pyrogram import filters
 from pyrogram.errors import FilePartTooBig, MessageNotModified
 from pyrogram.types import Message
 from pyromod.helpers import ikb
-from pySmartDL import SmartDL
 
 from uploadtgbot import DOWN_PATH, LOGGER, OWNER_ID
 from uploadtgbot.bot_class import UploadTgBot
 from uploadtgbot.db import LocalDB
-from uploadtgbot.db import UserUsage as db
+from uploadtgbot.db import Users as db
 from uploadtgbot.utils.caching import USER_CACHE, block_time, user_cache_reload
 from uploadtgbot.utils.constants import Constants
 from uploadtgbot.utils.custom_filters import user_check
@@ -31,7 +31,7 @@ async def download_files(c: UploadTgBot, m: Message):
     if m.from_user.id != OWNER_ID and m.from_user.id in set(list(USER_CACHE.keys())):
         await m.reply_text(
             "Spam protection active!\n"
-            f"Please try again after {TimeFormatter((((USER_CACHE[m.from_user.id]+block_time)-time())*1000))} minutes",
+            f"Please try again after {TimeFormatter((((USER_CACHE[m.from_user.id] + block_time) - time()) * 1000))} minutes",
         )
         return
 
@@ -111,7 +111,7 @@ async def download_files(c: UploadTgBot, m: Message):
             await sm.edit_text(
                 (
                     f"Downloaded to file in <u>{ms}</u> seconds.\n"
-                    f"Download Speed: {humanbytes(round((total_length/ms), 2))}"
+                    f"Download Speed: {humanbytes(round((total_length / ms), 2))}"
                 ),
             )
             LocalDB.set(f"up_{user_id}", True)

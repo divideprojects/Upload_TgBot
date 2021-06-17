@@ -7,6 +7,7 @@ from pyromod.helpers import ikb
 
 from uploadtgbot import AUTH_CHANNEL, LOGGER, OWNER_ID, SUPPORT_GROUP
 from uploadtgbot.bot_class import UploadTgBot
+from uploadtgbot.db import Users as db
 
 # -- Constants --  #
 NO_JOIN_START_TEXT = """
@@ -23,13 +24,13 @@ DEV_LEVEL = [int(OWNER_ID)]
 
 async def user_check_filter(_, c: UploadTgBot, m: Message):
     user_id = m.from_user.id
+    _ = db(user_id)
 
     # if user is dev or owner, return true
     if user_id in DEV_LEVEL:
         LOGGER.info("Dev User detected, skipping check")
         return True
 
-    invite_link = None
     try:
         invite_link = await c.create_chat_invite_link(int(AUTH_CHANNEL))
     except FloodWait as e:
