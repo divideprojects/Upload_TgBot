@@ -84,6 +84,7 @@ class Users(MongoDB):
             return new_data
         return user_data
 
+
 def humanbytes(size: int or str):
     if not size:
         return ""

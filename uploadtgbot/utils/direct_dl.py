@@ -4,7 +4,7 @@ from urllib.parse import unquote
 from bs4 import BeautifulSoup
 from httpx import get
 
-from uploadtgbot.utils.display_progress import humanbytes
+from uploadtgbot.utils.display_progress import human_bytes
 from uploadtgbot.utils.mega_dl import download_file
 
 
@@ -13,7 +13,7 @@ class DirectDl:
         self.url = url
 
     async def check_url(self):
-        if ("sourceforge.net") in self.url:
+        if "sourceforge.net" in self.url:
             return self.sourceforge()
         elif "drive.google.com" in self.url:
             return self.gdrive()
@@ -28,9 +28,8 @@ class DirectDl:
         elif "mega.nz" or "mega.co.nz" in self.url:
             tmp = await download_file(self.url)
             name, size, link = tmp[0], tmp[1], tmp[2]
-            return f"<b>Filename:</b> {name}\n<b>Size: {humanbytes(size)}</b>\n<b>Link:</b>\n{link}"
-        else:
-            return ""
+            return f"<b>Filename:</b> {name}\n<b>Size: {human_bytes(size)}</b>\n<b>Link:</b>\n{link}"
+        return ""
 
     def gdrive(self):
         """GDrive direct links generator"""
@@ -48,7 +47,7 @@ class DirectDl:
         elif link.find("uc?id=") != -1:
             file_id = link.split("uc?id=")[1].strip()
         url = f"{drive}/uc?export=download&id={file_id}"
-        download = get(url, stream=True, allow_redirects=False)
+        download = get(url, allow_redirects=False)
         cookies = download.cookies
         try:
             # In case of small file size, Google downloads directly
@@ -64,7 +63,6 @@ class DirectDl:
             name = page.find("span", {"class": "uc-name-size"}).text
             response = get(
                 export,
-                stream=True,
                 allow_redirects=False,
                 cookies=cookies,
             )
@@ -174,7 +172,7 @@ class DirectDl:
             return reply
         reply = ""
         dl_url = ""
-        download = get(self.url, stream=True, allow_redirects=False)
+        download = get(self.url, allow_redirects=False)
         try:
             dl_url = download.headers["location"]
         except KeyError:

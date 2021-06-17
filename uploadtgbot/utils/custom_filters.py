@@ -7,7 +7,7 @@ from pyromod.helpers import ikb
 
 from uploadtgbot import AUTH_CHANNEL, LOGGER, OWNER_ID, SUPPORT_GROUP
 from uploadtgbot.bot_class import UploadTgBot
-from uploadtgbot.db import Users as db
+from uploadtgbot.db import Users as Db
 
 # -- Constants --  #
 NO_JOIN_START_TEXT = """
@@ -24,7 +24,9 @@ DEV_LEVEL = [int(OWNER_ID)]
 
 async def user_check_filter(_, c: UploadTgBot, m: Message):
     user_id = m.from_user.id
-    _ = db(user_id)
+
+    # Update user in Database
+    _ = Db(user_id)
 
     # if user is dev or owner, return true
     if user_id in DEV_LEVEL:

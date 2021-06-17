@@ -1,6 +1,7 @@
 from math import floor
-from time import sleep, time
+from time import time
 from traceback import format_exc
+from asyncio import sleep
 
 from pyrogram.errors import MessageNotModified
 from pyromod.helpers import ikb
@@ -32,19 +33,19 @@ async def progress_for_pyrogram(
         time_to_completion = round((total - current) / speed) * 1000
         estimated_total_time = elapsed_time + time_to_completion
 
-        elapsed_time = TimeFormatter(milliseconds=elapsed_time)
-        estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
+        estimated_total_time = time_formatter(milliseconds=estimated_total_time)
 
         progress = "[{}{}] \n".format(
-            "".join(["●" for _ in range(floor(percentage / 5))]),
-            "".join(["○" for _ in range(20 - floor(percentage / 5))]),
+            "".join("●" for _ in range(floor(percentage / 5))),
+            "".join("○" for _ in range(20 - floor(percentage / 5))),
         )
+
 
         tmp = progress + Constants.PROGRESS.format(
             round(percentage, 2),
-            humanbytes(current),
-            humanbytes(total),
-            humanbytes(speed),
+            human_bytes(current),
+            human_bytes(total),
+            human_bytes(speed),
             estimated_total_time if estimated_total_time != "" else "0 s",
         )
         try:
@@ -60,7 +61,7 @@ async def progress_for_pyrogram(
             LOGGER.error(format_exc())
 
 
-def humanbytes(size: int or str):
+def human_bytes(size: int or str):
     if not size:
         return ""
     power = 2 ** 10
@@ -72,7 +73,7 @@ def humanbytes(size: int or str):
     return str(round(size, 2)) + " " + Dic_powerN[n] + "B"
 
 
-def TimeFormatter(milliseconds: int) -> str:
+def time_formatter(milliseconds: int) -> str:
     seconds, milliseconds = divmod(int(milliseconds), 1000)
     minutes, seconds = divmod(seconds, 60)
     hours, minutes = divmod(minutes, 60)

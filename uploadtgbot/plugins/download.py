@@ -19,8 +19,8 @@ from uploadtgbot.utils.caching import USER_CACHE, block_time, user_cache_reload
 from uploadtgbot.utils.constants import Constants
 from uploadtgbot.utils.custom_filters import user_check
 from uploadtgbot.utils.display_progress import (
-    TimeFormatter,
-    humanbytes,
+    time_formatter,
+    human_bytes,
     progress_for_pyrogram,
 )
 
@@ -31,7 +31,7 @@ async def download_files(c: UploadTgBot, m: Message):
     if m.from_user.id != OWNER_ID and m.from_user.id in set(list(USER_CACHE.keys())):
         await m.reply_text(
             "Spam protection active!\n"
-            f"Please try again after {TimeFormatter((((USER_CACHE[m.from_user.id] + block_time) - time()) * 1000))} minutes",
+            f"Please try again after {time_formatter((((USER_CACHE[m.from_user.id] + block_time) - time()) * 1000))} minutes",
         )
         return
 
@@ -84,7 +84,7 @@ async def download_files(c: UploadTgBot, m: Message):
                     f"<b>URL:</b> <i>{url}</i>\n"
                     f"<b>File Name:</b> <i>{custom_file_name}</i>\n"
                     f"<i>{progress_str}</i>\n"
-                    f"<i>{humanbytes(downloaded)} of {humanbytes(total_length)}</i>\n"
+                    f"<i>{human_bytes(downloaded)} of {human_bytes(total_length)}</i>\n"
                     f"<b>Speed:</b> <i>{speed}</i>\n"
                     f"<b>ETA:</b> <i>{estimated_total_time}</i>"
                 )
@@ -111,7 +111,7 @@ async def download_files(c: UploadTgBot, m: Message):
             await sm.edit_text(
                 (
                     f"Downloaded to file in <u>{ms}</u> seconds.\n"
-                    f"Download Speed: {humanbytes(round((total_length / ms), 2))}"
+                    f"Download Speed: {human_bytes(round((total_length / ms), 2))}"
                 ),
             )
             LocalDB.set(f"up_{user_id}", True)
@@ -120,7 +120,7 @@ async def download_files(c: UploadTgBot, m: Message):
                 file_size = path.getsize(download_file_path)
                 caption = (
                     f"<b>File Name:</b> <i>{custom_file_name}</i>"
-                    f"\n<b>File Size</b> <i>{humanbytes(file_size)}</i>"
+                    f"\n<b>File Size</b> <i>{human_bytes(file_size)}</i>"
                     f"\n<b>URL:</b> {url}"
                     "\n\nUploaded by @Upload_TgBot"
                 )

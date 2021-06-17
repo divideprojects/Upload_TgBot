@@ -11,7 +11,7 @@ THREAD_LOCK = RLock()
 
 # users stay cached for 5 mins
 block_time = 5 * 60
-USER_CACHE = TTLCache(maxsize=512, ttl=(block_time), timer=perf_counter)
+USER_CACHE = TTLCache(maxsize=512, ttl=block_time, timer=perf_counter)
 
 
 async def user_cache_reload(m: Message or CallbackQuery):

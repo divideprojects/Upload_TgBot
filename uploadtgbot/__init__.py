@@ -9,7 +9,7 @@ from traceback import format_exc
 LOG_DATETIME = datetime.now().strftime("%d_%m_%Y-%H_%M_%S")
 LOGDIR = f"{__name__}/logs"
 
-# Make Logs directory if it does not exixts
+# Make Logs directory if it does not exists
 if not path.isdir(LOGDIR):
     mkdir(LOGDIR)
 

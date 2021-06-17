@@ -53,15 +53,14 @@ async def parse_url(url):
         return f"{file_id}!{key}"
     elif "!" in url:
         match = findall(r"/#!(.*)", url)
-        path = match[0]
-        return path
+        return match[0]
     else:
         return None
 
 
 async def download_file(url):
     path = (await parse_url(url)).split("!")
-    if path == None:
+    if path is None:
         return None, None, None
     file_handle = path[0]
     file_key = path[1]

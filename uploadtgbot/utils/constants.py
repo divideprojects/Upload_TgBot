@@ -4,6 +4,7 @@ from uploadtgbot import CAPTION, OWNER_ID, SUPPORT_GROUP
 
 
 class Constants:
+    @staticmethod
     def refresh_stats(user_id: int):
         return ikb(
             [[("Upgrade 💰", "upgrade_acct"), ("Refresh 🔄", f"refresh_{user_id}")]],
@@ -12,7 +13,7 @@ class Constants:
     START_KB = [
         [
             ("How to use", "help_callback.start"),
-            ("Help & Support", f"https://t.me/{SUPPORT_GROUP}", "url"),
+            ("Help & Support", f"https://t.me/{SUPPORT_GROUP}", "url")
         ],
     ]
     page1_help_kb = [[(">>>", "help_callback.page2")]]
@@ -23,7 +24,7 @@ class Constants:
         [
             [
                 ("Support Group", f"https://t.me/{SUPPORT_GROUP}", "url"),
-                ("Bots Channel", "https://t.me/DivideProjects", "url"),
+                ("Bots Channel", "https://t.me/DivideProjects", "url")
             ],
         ],
     )
@@ -77,9 +78,8 @@ You can get the direct links by using this syntax: <code>/direct (url here)</cod
 <b>• Will the bot support more Direct links in future?</b>
 - <i>Yes, I will as much features as possible, if you want a specific feature, make it and send to @{SUPPORT_GROUP}</i>
 
-<b>• Why is there a restriction of 5 minutes?</b>
-- <i>For now bot is providing every service for free and that could be misused by spammers so in restriction is there in order to maintain a stable performance all of the users.</i>
-"""
+<b>• Why is there a restriction of 5 minutes?</b> - <i>For now bot is providing every service for free and that could 
+be misused by spammers so in restriction is there in order to maintain a stable performance all of the users.</i> """
 
     PROGRESS = """
 <b>Percentage:</b> <i>{0}%</i>
