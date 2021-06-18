@@ -1,5 +1,6 @@
 from asyncio import sleep
 from datetime import datetime
+from datetime import timedelta
 from math import floor
 from os import path, remove
 from re import findall
@@ -14,18 +15,17 @@ from pyrogram.types import Message
 from pyromod.helpers import ikb
 
 from uploadtgbot import LOGGER
-from uploadtgbot.vars import Vars
 from uploadtgbot.bot_class import UploadTgBot
 from uploadtgbot.db import LocalDB
 from uploadtgbot.db import MainDB
-from uploadtgbot.utils.caching import USER_CACHE, block_time, user_cache_reload
+from uploadtgbot.utils.caching import user_cache_reload, user_cache_check
 from uploadtgbot.utils.constants import Constants
 from uploadtgbot.utils.custom_filters import user_check
 from uploadtgbot.utils.display_progress import (
-    time_formatter,
     human_bytes,
     progress_for_pyrogram,
 )
+from uploadtgbot.vars import Vars
 
 
 async def get_custom_filename(link: str):
@@ -49,10 +49,12 @@ async def download_files(c: UploadTgBot, m: Message):
     user_id = m.from_user.id
     link = m.text
 
-    if m.from_user.id != Vars.OWNER_ID and m.from_user.id in set(list(USER_CACHE.keys())):
+    cache_status, cache_time = await user_cache_check(m)
+
+    if cache_status:
         await m.reply_text(
             "Spam protection active!\n"
-            f"Please try again after {time_formatter((((USER_CACHE[m.from_user.id] + block_time) - time()) * 1000))} minutes",
+            f"Please try again after {timedelta(seconds=cache_time)} seconds",
         )
         return
 
