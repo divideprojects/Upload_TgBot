@@ -80,6 +80,6 @@ async def get_stats_func(user_id: int, admin: bool):
             f"<b>Downloads:</b> <i>{total_downloads}</i>"
             f"\n<b>Usage:</b> <i>{total_usage}</i>"
             f"\n<b>Plan:</b> <i>{plan}</i>"
-            f"\n<b>Joined:<b> <i>{join_date}</i>"
+            f"\n<b>Joined:<b> <i>{join_date} UTC</i>"
         )
     return stats
