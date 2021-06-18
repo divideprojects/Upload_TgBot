@@ -1,8 +1,8 @@
-from motor.motor_asyncio import AsyncIOMotorClient
+from pymongo import MongoClient
 
 from uploadtgbot.vars import Vars
 
-dbClient = AsyncIOMotorClient(Vars.DB_URI)
+dbClient = MongoClient(Vars.DB_URI)
 
 
 class MongoDB:
@@ -13,47 +13,47 @@ class MongoDB:
         self.collection = self._db[collection]
 
     # Insert one entry into collection
-    async def insert_one(self, document):
-        result = await self.collection.insert_one(document)
+    def insert_one(self, document):
+        result = self.collection.insert_one(document)
         return repr(result.inserted_id)
 
     # Find one entry from collection
-    async def find_one(self, query):
-        result = await self.collection.find_one(query)
+    def find_one(self, query):
+        result = self.collection.find_one(query)
         if result:
             return result
         return False
 
     # Find entries from collection
-    async def find_all(self, query=None):
+    def find_all(self, query=None):
         if query is None:
             query = {}
         return self.collection.find(query)
 
     # Count entries from collection
-    async def count(self, query=None):
+    def count(self, query=None):
         if query is None:
             query = {}
-        return await self.collection.count_documents(query)
+        return self.collection.count_documents(query)
 
     # Delete entry/entries from collection
-    async def delete_one(self, query):
-        await self.collection.delete_many(query)
-        return await self.collection.count_documents({})
+    def delete_one(self, query):
+        self.collection.delete_many(query)
+        return self.collection.count_documents({})
 
     # Replace one entry in collection
-    async def replace(self, query, new_data):
-        old = await self.collection.find_one(query)
+    def replace(self, query, new_data):
+        old = self.collection.find_one(query)
         _id = old["_id"]
-        await self.collection.replace_one({"_id": _id}, new_data)
-        new = await self.collection.find_one({"_id": _id})
+        self.collection.replace_one({"_id": _id}, new_data)
+        new = self.collection.find_one({"_id": _id})
         return old, new
 
     # Update one entry from collection
-    async def update(self, query, update):
-        result = await self.collection.update_one(query, {"$set": update})
-        new_document = await self.collection.find_one(query)
+    def update(self, query, update):
+        result = self.collection.update_one(query, {"$set": update})
+        new_document = self.collection.find_one(query)
         return result.modified_count, new_document
 
-    async def db_command(self, command):
-        return await self._db.command(command)
+    def db_command(self, command):
+        return self._db.command(command)

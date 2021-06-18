@@ -25,7 +25,7 @@ class MainDB(MongoDB):
         self.user_id = user_id
         self.user_info = self.__ensure_in_db()  # get user_info from database
 
-    async def add_download(self, download_url: str, file_size: int, message_id: int):
+    def add_download(self, download_url: str, file_size: int, message_id: int):
         """
         Add download to list in user_info
         """
@@ -36,10 +36,10 @@ class MainDB(MongoDB):
             "time": time()
         }
         self.user_info["downloads"].append(new_download_data)
-        await self.update_user_stats()  # update the stats of user
-        return await self.update({"_id": self.user_id}, self.user_info)
+        self.update_user_stats()  # update the stats of user
+        return self.update({"_id": self.user_id}, self.user_info)
 
-    async def update_user_stats(self):
+    def update_user_stats(self):
         """
         Update the stats of user by getting values again!
         """
@@ -48,49 +48,49 @@ class MainDB(MongoDB):
         total_downloads = len(self.user_info["downloads"])
         self.user_info["total_downloads"] = total_downloads
 
-    async def get_info(self):
+    def get_info(self):
         """
         Function used to get info about a certain user
         """
         return self.user_info
 
-    async def change_plan(self, plan: str):
+    def change_plan(self, plan: str):
         """
         This function is used to change the plan of user
         """
         self.user_info["plan"] = plan
-        return await self.update({"_id": self.user_id}, self.user_info)
+        return self.update({"_id": self.user_id}, self.user_info)
 
     @staticmethod
-    async def get_all_users():
+    def get_all_users():
         """
         This function is used to get all the users stored in database
         """
-        return await MongoDB(MainDB.db_name).find_all()
+        return MongoDB(MainDB.db_name).find_all()
 
     @staticmethod
-    async def total_users_count():
+    def total_users_count():
         """
         This function is used to count all the users stored in database
         """
-        return await MongoDB(MainDB.db_name).count()
+        return MongoDB(MainDB.db_name).count()
 
     @staticmethod
-    async def delete_user(user_id: int):
+    def delete_user(user_id: int):
         """
         This function deletes the user from database
         """
-        return await MongoDB(MainDB.db_name).delete_one({"_id": user_id})
+        return MongoDB(MainDB.db_name).delete_one({"_id": user_id})
 
     @staticmethod
-    async def get_all_usage():
+    def get_all_usage():
         """
         This function gets all the data about all the users
         """
         collection = MongoDB(MainDB.db_name)
-        all_data = await collection.find_all()
-        total_usage = sum(i["usage"] async for i in all_data)
-        total_users = await collection.count()
+        all_data = collection.find_all()
+        total_usage = sum(i["usage"] for i in all_data)
+        total_users = collection.count()
         total_downloads = sum(len(i["downloads"]) for i in all_data)
         return total_usage, total_users, total_downloads
 

@@ -46,8 +46,8 @@ async def send_msg(user_id: int, m: Message):
     & filters.reply,
 )
 async def broadcast_(_, m: Message):
-    all_users = await MainDB.get_all_users()
-    total_users = await MainDB.total_users_count()
+    all_users = MainDB.get_all_users()
+    total_users = MainDB.total_users_count()
     done, failed, success = 0, 0, 0
 
     broadcast_msg = m.reply_to_message
@@ -81,7 +81,7 @@ async def broadcast_(_, m: Message):
             if sts == 200:
                 success += 1
             elif sts == 400:
-                await MainDB.delete_user(user["id"])
+                MainDB.delete_user(user["id"])
             else:
                 failed += 1
 

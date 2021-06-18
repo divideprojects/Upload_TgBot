@@ -61,7 +61,7 @@ async def upgrade_acct(_, q: CallbackQuery):
 
 async def get_stats_func(user_id: int, admin: bool):
     if admin:
-        total_usage, total_users, total_downloads = await MainDB.get_all_usage()
+        total_usage, total_users, total_downloads = MainDB.get_all_usage()
         total_usage = human_bytes(total_usage)  # Convert to human readable format
         stats = (
             "<b>Admin Stats</b>"
@@ -71,7 +71,7 @@ async def get_stats_func(user_id: int, admin: bool):
             f"\n<b>Total Users:</b> <i>{total_users}</i>"
         )
     else:
-        user_stats = await MainDB(user_id).get_info()
+        user_stats = MainDB(user_id).get_info()
         total_usage = human_bytes(user_stats["total_usage"])  # Convert to human readable format
         total_downloads = user_stats["total_downloads"]
         stats = (
