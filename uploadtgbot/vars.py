@@ -6,7 +6,6 @@ def load_var(var_name, def_value=None):
 
 
 class Vars:
-
     CACHE_TIME = int(load_var("CACHE_TIME", 5))
     DOWN_PATH = f"{getcwd()}/uploadtgbot/downloads"
     BOT_TOKEN = load_var("BOT_TOKEN")

@@ -2,12 +2,12 @@ from pyrogram import filters
 from pyrogram.errors import MessageNotModified
 from pyrogram.types import CallbackQuery, Message
 
-from uploadtgbot.vars import Vars
 from uploadtgbot.bot_class import UploadTgBot
 from uploadtgbot.db import MainDB
-from uploadtgbot.utils.display_progress import human_bytes
 from uploadtgbot.utils.constants import Constants
 from uploadtgbot.utils.custom_filters import user_check
+from uploadtgbot.utils.display_progress import human_bytes
+from uploadtgbot.vars import Vars
 
 
 @UploadTgBot.on_message(filters.command("stats", Vars.PREFIX_HANDLER) & user_check)

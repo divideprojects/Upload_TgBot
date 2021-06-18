@@ -7,7 +7,7 @@ from re import findall
 from time import time
 from traceback import format_exc
 
-from httpx import get, RequestError
+from httpx import get
 from pySmartDL import SmartDL
 from pyrogram import filters
 from pyrogram.errors import FilePartTooBig, MessageNotModified

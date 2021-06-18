@@ -6,9 +6,9 @@ from pyrogram.types import Message
 from pyromod.helpers import ikb
 
 from uploadtgbot import LOGGER
-from uploadtgbot.vars import Vars
 from uploadtgbot.bot_class import UploadTgBot
 from uploadtgbot.db import MainDB
+from uploadtgbot.vars import Vars
 
 # -- Constants --  #
 NO_JOIN_START_TEXT = """

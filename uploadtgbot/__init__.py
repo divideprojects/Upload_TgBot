@@ -1,8 +1,8 @@
 from logging import INFO, WARNING, StreamHandler, basicConfig, getLogger
 from sys import exit as sysexit
 from sys import stdout, version_info
-from traceback import format_exc
 from time import time
+from traceback import format_exc
 
 basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
