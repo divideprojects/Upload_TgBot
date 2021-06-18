@@ -37,7 +37,9 @@ async def get_custom_filename(link: str):
         url = link
         try:
             file_name = findall("filename=(.+)", get(url).headers['content-disposition'])[0]
-        except (RequestError, IndexError):
+        except (RequestError, IndexError, Exception) as ef:
+            LOGGER.error(ef)
+            LOGGER.error(format_exc())
             file_name = path.basename(link)
     return url, file_name
 
