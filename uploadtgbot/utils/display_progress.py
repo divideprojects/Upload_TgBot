@@ -62,7 +62,7 @@ async def progress_for_pyrogram(
 
 def human_bytes(size: int or str):
     if not size:
-        return ""
+        return "0B"
     power = 2 ** 10
     n = 0
     dic_power_n = {0: " ", 1: "Ki", 2: "Mi", 3: "Gi", 4: "Ti"}
