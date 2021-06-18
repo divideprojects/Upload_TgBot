@@ -36,10 +36,17 @@ async def get_custom_filename(link: str):
     else:
         url = link
         try:
-            file_name = findall("filename=(.+)", get(url).headers['content-disposition'])[0]
-        except (RequestError, IndexError, Exception) as ef:
+            cd = get(url).headers.get('content-disposition')
+            file_name = findall("filename=(.+)", cd)
+
+            if len(file_name) == 0:
+                return url, path.basename(link)
+
+            return file_name[0]
+        except Exception as ef:
             LOGGER.error(ef)
             LOGGER.error(format_exc())
+
             file_name = path.basename(link)
     return url, file_name
 
