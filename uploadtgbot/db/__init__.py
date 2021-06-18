@@ -89,7 +89,7 @@ class MainDB(MongoDB):
         """
         collection = MongoDB(MainDB.db_name)
         all_data = collection.find_all()
-        total_usage = sum(i["usage"] for i in all_data)
+        total_usage = sum(i["downloads"]["usage"] for i in all_data)
         total_users = collection.count()
         total_downloads = sum(len(i["downloads"]) for i in all_data)
         return total_usage, total_users, total_downloads
