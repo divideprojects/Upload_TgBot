@@ -138,7 +138,7 @@ async def download_files(c: UploadTgBot, m: Message):
 
             LocalDB.set(f"up_{user_id}", True)
             # Log download to database
-            user_db.add_download(download_url=link, file_size=total_length, message_id=m.message_id)
+            user_db.add_download(download_url=url, file_size=total_length, message_id=m.message_id)
 
             try:
                 file_size = path.getsize(download_file_path)
