@@ -35,8 +35,8 @@ async def str_to_a32(b):
 
 async def base64_url_decode(data):
     data += "=="[(2 - len(data) * 3) % 4:]
-    for search, replace in (("-", "+"), ("_", "/"), (",", "")):
-        data = data.replace(search, replace)
+    for search_data, replace in (("-", "+"), ("_", "/"), (",", "")):
+        data = data.replace(search_data, replace)
     return b64decode(data)
 
 
@@ -76,9 +76,9 @@ async def download_file(url):
         return None, None, None
     file_url = file_data["g"]
     file_size = file_data["s"]
-    attribs = await base64_url_decode(file_data["at"])
-    attribs = await decrypt_attr(attribs, k)
-    file_name = attribs["n"]
+    attributes = await base64_url_decode(file_data["at"])
+    attributes = await decrypt_attr(attributes, k)
+    file_name = attributes["n"]
     return file_name, file_size, file_url
 
 

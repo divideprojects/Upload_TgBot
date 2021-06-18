@@ -40,7 +40,6 @@ async def progress_for_pyrogram(
             "".join("○" for _ in range(20 - floor(percentage / 5))),
         )
 
-
         tmp = progress + Constants.PROGRESS.format(
             round(percentage, 2),
             human_bytes(current),
@@ -66,11 +65,11 @@ def human_bytes(size: int or str):
         return ""
     power = 2 ** 10
     n = 0
-    Dic_powerN = {0: " ", 1: "Ki", 2: "Mi", 3: "Gi", 4: "Ti"}
+    dic_power_n = {0: " ", 1: "Ki", 2: "Mi", 3: "Gi", 4: "Ti"}
     while size > power:
         size /= power
         n += 1
-    return str(round(size, 2)) + " " + Dic_powerN[n] + "B"
+    return str(round(size, 2)) + " " + dic_power_n[n] + "B"
 
 
 def time_formatter(milliseconds: int) -> str:

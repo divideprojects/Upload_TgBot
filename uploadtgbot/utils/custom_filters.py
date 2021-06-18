@@ -5,28 +5,28 @@ from pyrogram.errors import FloodWait, UserNotParticipant
 from pyrogram.types import Message
 from pyromod.helpers import ikb
 
-from uploadtgbot import AUTH_CHANNEL, LOGGER, OWNER_ID, SUPPORT_GROUP
+from uploadtgbot import LOGGER
+from uploadtgbot.vars import Vars
 from uploadtgbot.bot_class import UploadTgBot
-from uploadtgbot.db import Users as Db
+from uploadtgbot.db import MainDB
 
 # -- Constants --  #
 NO_JOIN_START_TEXT = """
-You must be a member of the Channel to use the bot, \
-this step ensure that you know about bot status \
-and latest updates.
-This step is also taken to prevent misuse of bot as \
-all users will be logged.
+Hey {},
+You must join our channel to verify yourself, this step ensures that real users are using the bot!
+
+Click the button below to join the group and verify yourself!
 """
 # -- Constants --  #
 
-DEV_LEVEL = [int(OWNER_ID)]
+DEV_LEVEL = [int(Vars.OWNER_ID)]
 
 
 async def user_check_filter(_, c: UploadTgBot, m: Message):
     user_id = m.from_user.id
 
     # Update user in Database
-    _ = Db(user_id)
+    _ = MainDB(user_id)
 
     # if user is dev or owner, return true
     if user_id in DEV_LEVEL:
@@ -34,19 +34,13 @@ async def user_check_filter(_, c: UploadTgBot, m: Message):
         return True
 
     try:
-        invite_link = await c.create_chat_invite_link(int(AUTH_CHANNEL))
-    except FloodWait as e:
-        await sleep(e.x)
-        return
-
-    try:
-        user_member = await c.get_chat_member(int(AUTH_CHANNEL), user_id)
+        user_member = await c.get_chat_member(int(Vars.AUTH_CHANNEL), user_id)
         # If user is banned in Channel
         if user_member.status == "kicked":
             await m.reply_text(
                 (
                     "Sorry, You are Banned!\n"
-                    f"Contact my [Support Group](https://t.me/{SUPPORT_GROUP}) to know more."
+                    f"Contact my [Support Group](https://t.me/{Vars.SUPPORT_GROUP}) to know more."
                 ),
             )
             return
@@ -55,17 +49,23 @@ async def user_check_filter(_, c: UploadTgBot, m: Message):
             return True
 
     except UserNotParticipant:
-        await m.reply_text(
-            NO_JOIN_START_TEXT,
-            disable_web_page_preview=True,
-            parse_mode="markdown",
-            reply_markup=ikb([[("Join Channel", invite_link.invite_link, "url")]]),
-        )
+        try:
+            invite_link = await c.create_chat_invite_link(int(Vars.AUTH_CHANNEL))
+            await m.reply_text(
+                NO_JOIN_START_TEXT,
+                disable_web_page_preview=True,
+                parse_mode="markdown",
+                reply_markup=ikb([[("Join Channel", invite_link.invite_link, "url")]])
+            )
+        except FloodWait as e:
+            await sleep(e.x)
+            return False
         return False
+
     except Exception as ef:
         LOGGER.error(f"Error: {ef}")
         await m.reply_text(
-            f"Something went Wrong. Contact my [Support Group](https://t.me/{SUPPORT_GROUP}).",
+            f"Something went Wrong. Contact my [Support Group](https://t.me/{Vars.SUPPORT_GROUP}).",
             disable_web_page_preview=True,
         )
         return

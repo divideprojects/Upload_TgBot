@@ -9,7 +9,7 @@ from uploadtgbot import LOGGER
 
 THREAD_LOCK = RLock()
 
-# users stay cached for 5 mins
+# users stay cached for 5 minutes
 block_time = 5 * 60
 USER_CACHE = TTLCache(maxsize=512, ttl=block_time, timer=perf_counter)
 

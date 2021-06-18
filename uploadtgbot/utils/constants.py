@@ -1,43 +1,38 @@
 from pyromod.helpers import ikb
 
-from uploadtgbot import CAPTION, OWNER_ID, SUPPORT_GROUP
+from uploadtgbot.vars import Vars
 
 
 class Constants:
     @staticmethod
-    def refresh_stats(user_id: int):
-        return ikb(
-            [[("Upgrade 💰", "upgrade_acct"), ("Refresh 🔄", f"refresh_{user_id}")]],
-        )
+    def refresh_stats(user_id: int, admin: bool):
+        kb = ikb([[("Upgrade 💰", "upgrade_acct"), ("Refresh 🔄", f"refresh_user_{user_id}")]])
+        if admin:
+            kb = ikb([[("Refresh 🔄", "refresh_admin")]])
+        return kb
 
     START_KB = [
-        [
-            ("How to use", "help_callback.start"),
-            ("Help & Support", f"https://t.me/{SUPPORT_GROUP}", "url")
-        ],
-    ]
+        [("How to use", "help_callback.start"), ("Help & Support", f"https://t.me/{Vars.SUPPORT_GROUP}", "url")]]
     page1_help_kb = [[(">>>", "help_callback.page2")]]
     page2_help_kb = [[("<<<", "help_callback.page1"), (">>>", "help_callback.page3")]]
     page3_help_kb = [[("<<<", "help_callback.page2")]]
 
     SUPPORT_KB = ikb(
-        [
-            [
-                ("Support Group", f"https://t.me/{SUPPORT_GROUP}", "url"),
-                ("Bots Channel", "https://t.me/DivideProjects", "url")
-            ],
-        ],
+        [[("Support Group", f"https://t.me/{Vars.SUPPORT_GROUP}", "url"),
+          ("Bots Channel", "https://t.me/DivideProjects", "url")]]
     )
 
     @staticmethod
     def ban_kb(user_id: int):
-        return ikb([[("Ban User", f"ban_{user_id}")]]) if user_id != OWNER_ID else None
+        return ikb([[("Ban User", f"ban_{user_id}")]]) if user_id != Vars.OWNER_ID else None
 
     USAGE_WATERMARK_ADDER = f"""
 Hi {{}}, I am Telegram File Uploader Bot!
 
-I can download files from a URL, just me a link to see what I can do!
-{CAPTION}
+I can download files from a direct link or provide you a direct link from many services!
+Just me a link to see what I can do!
+
+{Vars.CAPTION}
 """
 
     page1_help = """
@@ -76,7 +71,7 @@ You can get the direct links by using this syntax: <code>/direct (url here)</cod
 - <i>No, any user found uploading and using NSFW Videos on Bot will be banned infinitely.</i>
 
 <b>• Will the bot support more Direct links in future?</b>
-- <i>Yes, I will as much features as possible, if you want a specific feature, make it and send to @{SUPPORT_GROUP}</i>
+- <i>Yes, I will as much features as possible, if you want a specific feature, make it and send to @{Vars.SUPPORT_GROUP}</i> 
 
 <b>• Why is there a restriction of 5 minutes?</b> - <i>For now bot is providing every service for free and that could 
 be misused by spammers so in restriction is there in order to maintain a stable performance all of the users.</i> """

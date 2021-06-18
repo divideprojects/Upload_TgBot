@@ -6,17 +6,18 @@ from re import findall
 from time import time
 from traceback import format_exc
 
-from httpx import get,RequestError
+from httpx import get, RequestError
 from pySmartDL import SmartDL
 from pyrogram import filters
 from pyrogram.errors import FilePartTooBig, MessageNotModified
 from pyrogram.types import Message
 from pyromod.helpers import ikb
 
-from uploadtgbot import DOWN_PATH, LOGGER, OWNER_ID
+from uploadtgbot import LOGGER
+from uploadtgbot.vars import Vars
 from uploadtgbot.bot_class import UploadTgBot
 from uploadtgbot.db import LocalDB
-from uploadtgbot.db import Users as db
+from uploadtgbot.db import MainDB
 from uploadtgbot.utils.caching import USER_CACHE, block_time, user_cache_reload
 from uploadtgbot.utils.constants import Constants
 from uploadtgbot.utils.custom_filters import user_check
@@ -27,54 +28,64 @@ from uploadtgbot.utils.display_progress import (
 )
 
 
+async def get_custom_filename(link: str):
+    if "|" in link:
+        url, file_name = link.split("|")
+        url = url.strip()
+        file_name = file_name.strip()
+    else:
+        url = link
+        try:
+            file_name = findall("filename=(.+)", get(url).headers['content-disposition'])[0]
+        except RequestError:
+            file_name = path.basename(link)
+    return url, file_name
+
+
 @UploadTgBot.on_message(filters.regex(r"\bhttps?://.*\.\S+") & user_check)
 async def download_files(c: UploadTgBot, m: Message):
     user_id = m.from_user.id
-    if m.from_user.id != OWNER_ID and m.from_user.id in set(list(USER_CACHE.keys())):
+    link = m.text
+
+    if m.from_user.id != Vars.OWNER_ID and m.from_user.id in set(list(USER_CACHE.keys())):
         await m.reply_text(
             "Spam protection active!\n"
             f"Please try again after {time_formatter((((USER_CACHE[m.from_user.id] + block_time) - time()) * 1000))} minutes",
         )
         return
 
-    link = m.text
     LocalDB.set(f"dl_{user_id}", True)
-    userdb = db(user_id)
+    user_db = MainDB(user_id)
     sm = await m.reply_text("Please Wait!\nChecking link...", quote=True)
-    user_down = f"{DOWN_PATH}/{user_id}/"
+    user_down = f"{Vars.DOWN_PATH}/{user_id}/"
+    start_t = datetime.now()
+
     try:
-        start_t = datetime.now()
-        if "|" in link:
-            url, custom_file_name = link.split("|")
-            url = url.strip()
-            custom_file_name = custom_file_name.strip()
-        else:
-            url = link
-            try:
-                custom_file_name = findall("filename=(.+)", get(url).headers['content-disposition'])[0]
-            except RequestError:
-                custom_file_name = path.basename(link)
+        url, custom_file_name = await get_custom_filename(link)
         download_file_path = path.join(user_down, custom_file_name)
         downloader = SmartDL(url, download_file_path, progress_bar=False)
         downloader.start(blocking=False)
         await user_cache_reload(m)
         c_time = time()
         while not downloader.isFinished():
+
             # Cancel the download task
             if not LocalDB.get(f"dl_{user_id}"):
                 downloader.stop()
                 await sm.edit_text("Task Cancelled by User!")
                 return
+
             total_length = downloader.filesize or 0
-            if total_length != 0 and total_length > 2097152000:  # size less than 2gb
+            downloaded = downloader.get_dl_size()
+
+            if (downloaded or total_length) > 2097152000:  # size less than 2gb
                 await sm.edit_text(
                     "Cannot download files more than 2 GB because of Telegram restrictions!"
                 )
                 return
-            downloaded = downloader.get_dl_size()
+
             display_message = ""
-            now = time()
-            diff = now - c_time
+            diff = time() - c_time
             percentage = downloader.get_progress() * 100
             speed = downloader.get_speed(human=True)
             progress_str = "<b>[{}{}]</b>\n<b>Progress:</b> <i>{}%</i>".format(
@@ -83,7 +94,9 @@ async def download_files(c: UploadTgBot, m: Message):
                 round(percentage, 2),
             )
 
+            # get download eta
             estimated_total_time = downloader.get_eta(human=True)
+
             try:
                 current_message = (
                     f"<i><b>Trying to download...</b></i>\n"
@@ -94,11 +107,14 @@ async def download_files(c: UploadTgBot, m: Message):
                     f"<b>Speed:</b> <i>{speed}</i>\n"
                     f"<b>ETA:</b> <i>{estimated_total_time}</i>"
                 )
+
                 if round(diff % 10.00) == 0 and current_message != display_message:
+
                     # Cancel the Download process
                     if not LocalDB.get(f"dl_{user_id}"):
                         await sm.edit_text("Download task cancelled by user!")
                         return
+
                     await sm.edit_text(
                         current_message,
                         reply_markup=ikb([[("Cancel ❌", "cancel_dl")]]),
@@ -117,10 +133,13 @@ async def download_files(c: UploadTgBot, m: Message):
                 (
                     f"Downloaded to file in <u>{ms}</u> seconds.\n"
                     f"Download Speed: {human_bytes(round((total_length / ms), 2))}"
-                ),
+                )
             )
+
             LocalDB.set(f"up_{user_id}", True)
-            userdb.add_download(dbytes=total_length, download=link)
+            # Log download to database
+            await user_db.add_download(download_url=link, file_size=total_length, message_id=m.message_id)
+
             try:
                 file_size = path.getsize(download_file_path)
                 caption = (
@@ -130,7 +149,7 @@ async def download_files(c: UploadTgBot, m: Message):
                     "\n\nUploaded by @Upload_TgBot"
                 )
                 await c.send_document(
-                    m.chat.id,
+                    user_id,
                     download_file_path,
                     caption=caption,
                     reply_markup=Constants.SUPPORT_KB,
@@ -145,12 +164,19 @@ async def download_files(c: UploadTgBot, m: Message):
                 )
                 await sm.delete()
             except FilePartTooBig:
-                await sm.edit_text("Could not upload file!\nSize too big!")
+                await sm.edit_text(
+                    (
+                        "Could not upload file!"
+                        "\nSize too big! (Larger than 2GB)"
+                    )
+                )
                 return
+
     except Exception as ef:
         LOGGER.error(ef)
         LOGGER.error(format_exc())
         await sm.edit_text(f"Failed Download!\n{format_exc()}")
         return
+
     remove(download_file_path)
     return
