@@ -105,7 +105,7 @@ class MainDB(MongoDB):
                 "total_usage": 0,  # usage of user in bytes
                 "total_downloads": 0,  # total downloads by user in bytes
                 "plan": "free",  # Plan of use
-                "join_date": datetime.now().isoformat(),  # Joining date of user with time
+                "join_date": datetime.now(),  # Joining date of user with time
                 "downloads": [],  # list[dictionary{}] with data specific for each URL
             }
             self.insert_one(new_data)

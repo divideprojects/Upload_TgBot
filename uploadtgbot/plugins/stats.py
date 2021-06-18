@@ -74,8 +74,12 @@ async def get_stats_func(user_id: int, admin: bool):
         user_stats = MainDB(user_id).get_info()
         total_usage = human_bytes(user_stats["total_usage"])  # Convert to human readable format
         total_downloads = user_stats["total_downloads"]
+        plan = user_stats["plan"]
+        join_date = user_stats["join_date"].strftime("%m/%d/%Y, %H:%M:%S")
         stats = (
             f"<b>Downloads:</b> <i>{total_downloads}</i>"
             f"\n<b>Usage:</b> <i>{total_usage}</i>"
+            f"\n<b>Plan:</b> <i>{plan}</i>"
+            f"\n<b>Joined:<b> <i>{join_date}</i>"
         )
     return stats
