@@ -28,7 +28,7 @@ class MongoDB:
     def find_all(self, query=None):
         if query is None:
             query = {}
-        return self.collection.find(query)
+        return [doc for doc in self.collection.find(query)]
 
     # Count entries from collection
     def count(self, query=None):
