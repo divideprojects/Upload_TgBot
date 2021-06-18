@@ -28,7 +28,7 @@ if version_info[0] < 3 or version_info[1] < 7:
     sysexit(1)  # Quit the Bot
 
 try:
-    from .vars import Config
+    from .vars import Vars
 except Exception as ef:
     LOGGER.error(ef)  # Print Error
     LOGGER.error(format_exc())
@@ -37,8 +37,7 @@ except Exception as ef:
 LOGGER.info("------------------------")
 LOGGER.info("|     Upload_TgBot     |")
 LOGGER.info("------------------------")
-LOGGER.info(f"Version: {Config.VERSION}")
-LOGGER.info(f"Owner: {str(Config.OWNER_ID)}\n")
-
+LOGGER.info(f"Version: {Vars.VERSION}")
+LOGGER.info(f"Owner: {str(Vars.OWNER_ID)}\n")
 
 UPTIME = time()

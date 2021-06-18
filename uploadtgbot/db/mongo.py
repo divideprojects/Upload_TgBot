@@ -1,15 +1,15 @@
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from uploadtgbot import DB_URI
+from uploadtgbot.vars import Vars
 
-dbClient = AsyncIOMotorClient(DB_URI)
+dbClient = AsyncIOMotorClient(Vars.DB_URI)
 
 
 class MongoDB:
     """Class for interacting with Bot database."""
 
     def __init__(self, collection) -> None:
-        self._db = dbClient["upload_tgbot"]
+        self._db = dbClient["bots"]
         self.collection = self._db[collection]
 
     # Insert one entry into collection
