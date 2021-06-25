@@ -27,7 +27,7 @@ async def user_cache_reload(m: Message or CallbackQuery):
         if user_id == Vars.OWNER_ID:
             return
 
-        USER_CACHE[user_id] = time()
+        USER_CACHE[user_id] = time() + block_time
         LOGGER.info(
             f"Restricting {user_id} for {block_time}s",
         )
@@ -44,6 +44,6 @@ async def user_cache_check(m: Message or CallbackQuery):
         user_id = m.from_user.id
 
         if user_id in USER_CACHE.keys():
-            return True, USER_CACHE[user_id]
+            return True, USER_CACHE[user_id] - time()
 
         return False, 0
