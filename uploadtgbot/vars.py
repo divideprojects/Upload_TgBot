@@ -1,11 +1,13 @@
-from os import environ
+from os import environ, getcwd
 
 
 def load_var(var_name, def_value=None):
     return environ.get(var_name, def_value)
 
 
-class Config:
+class Vars:
+    CACHE_TIME = int(load_var("CACHE_TIME", 5))
+    DOWN_PATH = f"{getcwd()}/uploadtgbot/downloads"
     BOT_TOKEN = load_var("BOT_TOKEN")
     APP_ID = int(load_var("API_ID"))
     API_HASH = load_var("API_HASH")
@@ -17,3 +19,5 @@ class Config:
     DB_URI = load_var("DB_URI")
     CAPTION = load_var("CAPTION", "By @DivideProjects")
     VERSION = load_var("VERSION", "v1.1 - Stable")
+    BOT_USERNAME = load_var("BOT_USERNAME")
+    WORKERS = load_var("WORKERS", 8)

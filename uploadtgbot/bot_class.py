@@ -4,29 +4,32 @@ from time import gmtime, strftime, time
 
 from pyrogram import Client, __version__
 from pyrogram.raw.all import layer
+from uploadtgbot.vars import Vars
+from uploadtgbot import LOGGER, UPTIME
 
-from uploadtgbot import API_HASH, APP_ID, BOT_TOKEN, LOGGER, MESSAGE_DUMP, UPTIME
 
 # Check if MESSAGE_DUMP is correct
-if MESSAGE_DUMP == -100 or not str(MESSAGE_DUMP).startswith("-100"):
+if Vars.MESSAGE_DUMP == -100 or not str(Vars.MESSAGE_DUMP).startswith("-100"):
     raise Exception(
-        "Please enter a vaild Supergroup ID, A Supergroup ID starts with -100",
+        "Please enter a valid Supergroup ID, A Supergroup ID starts with -100",
     )
 
 
 class UploadTgBot(Client):
-    """Starts the Pyrogram Client on the Bot Token when we do 'python3 -m alita'"""
+    """
+    Starts the Pyrogram Client on the Bot Token
+    """
 
     def __init__(self):
         name = self.__class__.__name__.lower()
 
         super().__init__(
             name,
-            bot_token=BOT_TOKEN,
+            bot_token=Vars.BOT_TOKEN,
             plugins=dict(root=f"{name}.plugins"),
-            api_id=APP_ID,
-            api_hash=API_HASH,
-            workers=8,
+            api_id=Vars.APP_ID,
+            api_hash=Vars.API_HASH,
+            workers=Vars.WORKERS,
         )
 
     async def start(self):
@@ -44,12 +47,8 @@ class UploadTgBot(Client):
         LOGGER.info(f"Python Version: {python_version()}\n")
         LOGGER.info("Bot Started Successfully!\n")
 
-    async def stop(self):
+    async def stop(self, **kwargs):
         """Stop the bot and send a message to MESSAGE_DUMP telling that the bot has stopped."""
         runtime = strftime("%Hh %Mm %Ss", gmtime(time() - UPTIME))
         await super().stop()
-        LOGGER.info(
-            f"""Bot Stopped.
-            Runtime: {runtime}s\n
-        """,
-        )
+        LOGGER.info(f"""Bot Stopped!\nRuntime: {runtime}s""")

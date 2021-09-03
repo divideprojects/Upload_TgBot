@@ -25,10 +25,11 @@ class DirectDl:
             return self.osdn()
         elif "github.com" in self.url:
             return self.github()
-        elif "mega.nz" or "mega.co.nz" in self.url:
+        elif ("mega.nz" or "mega.co.nz") in self.url:
             tmp = await download_file(self.url)
             name, size, link = tmp[0], tmp[1], tmp[2]
-            return f"<b>Filename:</b> {name}\n<b>Size: {human_bytes(size)}</b>\n<b>Link:</b>\n{link}"
+            return (f"<a href='{link}'>{name}</a>"
+                    f"\n<b>Size: {human_bytes(size)}</b>")
         return ""
 
     def gdrive(self):
@@ -37,7 +38,7 @@ class DirectDl:
         try:
             link = findall(r"\bhttps?://drive\.google\.com\S+", self.url)[0]
         except IndexError:
-            reply = "`No Google drive links found`\n"
+            reply = "<b>Not a valid Google drive link</b>\n"
             return reply
         file_id, reply = "", ""
         if link.find("view") != -1:
@@ -53,7 +54,7 @@ class DirectDl:
             # In case of small file size, Google downloads directly
             dl_url = download.headers["location"]
             if "accounts.google.com" in dl_url:  # non-public file
-                reply += "`Link is not public!`\n"
+                reply += "<b>Link is not public!</b>\n"
                 return reply
             name = "Direct Download Link"
         except KeyError:
