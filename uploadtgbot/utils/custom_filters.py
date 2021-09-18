@@ -52,7 +52,7 @@ async def user_check_filter(_, c: UploadTgBot, m: Message):
         try:
             invite_link = await c.create_chat_invite_link(int(Vars.AUTH_CHANNEL))
             await m.reply_text(
-                NO_JOIN_START_TEXT,
+                NO_JOIN_START_TEXT.format(m.from_user.first_name),
                 disable_web_page_preview=True,
                 parse_mode="markdown",
                 reply_markup=ikb([[("Join Channel", invite_link.invite_link, "url")]])
