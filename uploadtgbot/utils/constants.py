@@ -26,13 +26,13 @@ class Constants:
     def ban_kb(user_id: int):
         return ikb([[("Ban User", f"ban_{user_id}")]]) if user_id != Vars.OWNER_ID else None
 
-    USAGE_WATERMARK_ADDER = f"""
-Hi {{}}, I am Telegram File Uploader Bot!
+    USAGE_WATERMARK_ADDER = """
+Hi {}, I am Telegram File Uploader Bot!
 
 I can download files from a direct link or provide you a direct link from many services!
 Just me a link to see what I can do!
 
-{Vars.CAPTION}
+{}
 """
 
     page1_help = """

@@ -12,8 +12,8 @@ from uploadtgbot.vars import Vars
     filters.command("start", Vars.PREFIX_HANDLER) & filters.private & user_check,
 )
 async def start_bot(_, m: Message):
-    await m.reply_text(
-        Constants.USAGE_WATERMARK_ADDER.format(m.from_user.first_name),
+    return await m.reply_text(
+        Constants.USAGE_WATERMARK_ADDER.format(m.from_user.first_name, Vars.CAPTION),
         reply_markup=ikb(Constants.START_KB),
         disable_web_page_preview=True,
         quote=True,
@@ -24,7 +24,7 @@ async def start_bot(_, m: Message):
     filters.command("help", Vars.PREFIX_HANDLER) & filters.private & user_check,
 )
 async def help_bot(_, m: Message):
-    await m.reply_text(
+    return await m.reply_text(
         Constants.page1_help,
         reply_markup=ikb(Constants.page1_help_kb),
         disable_web_page_preview=True,
