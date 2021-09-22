@@ -10,4 +10,4 @@ pickleDB~=0.9.2
 cachetools~=4.2.2
 pycryptodome~=3.10.1
 aiofiles~=0.7.0
-pymongo~=3.11.4
+pymongo~=3.12.0
