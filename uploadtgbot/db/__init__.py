@@ -35,7 +35,7 @@ class MainDB(MongoDB):
             "url": download_url,
             "file_size": file_size,
             "message_id": message_id,
-            "time": time()
+            "time": time(),
         }
         self.user_info["downloads"].append(new_download_data)
         self.update_user_stats()  # update the stats of user

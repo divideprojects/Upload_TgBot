@@ -7,9 +7,7 @@ from traceback import format_exc
 basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     level=INFO,
-    handlers=[
-        StreamHandler(stdout)
-    ],
+    handlers=[StreamHandler(stdout)],
 )
 
 getLogger("pyrogram").setLevel(WARNING)
@@ -23,7 +21,7 @@ if version_info[0] < 3 or version_info[1] < 7:
         (
             "You MUST have a Python Version of at least 3.7!\n"
             "Multiple features depend on this. Bot quitting."
-        )
+        ),
     )
     sysexit(1)  # Quit the Bot
 

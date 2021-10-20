@@ -1,6 +1,5 @@
 from asyncio import sleep
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
 from math import floor
 from os import path, remove
 from re import findall
@@ -8,23 +7,19 @@ from time import time
 from traceback import format_exc
 
 from httpx import get
-from pySmartDL import SmartDL
 from pyrogram import filters
 from pyrogram.errors import FilePartTooBig, MessageNotModified
 from pyrogram.types import Message
 from pyromod.helpers import ikb
+from pySmartDL import SmartDL
 
 from uploadtgbot import LOGGER
 from uploadtgbot.bot_class import UploadTgBot
-from uploadtgbot.db import LocalDB
-from uploadtgbot.db import MainDB
-from uploadtgbot.utils.caching import user_cache_reload, user_cache_check
+from uploadtgbot.db import LocalDB, MainDB
+from uploadtgbot.utils.caching import user_cache_check, user_cache_reload
 from uploadtgbot.utils.constants import Constants
 from uploadtgbot.utils.custom_filters import user_check
-from uploadtgbot.utils.display_progress import (
-    human_bytes,
-    progress_for_pyrogram,
-)
+from uploadtgbot.utils.display_progress import human_bytes, progress_for_pyrogram
 from uploadtgbot.vars import Vars
 
 
@@ -36,7 +31,7 @@ async def get_custom_filename(link: str):
     else:
         url = link
         try:
-            cd = get(url).headers.get('content-disposition')
+            cd = get(url).headers.get("content-disposition")
             file_name = findall("filename=(.+)", cd)
 
             if len(file_name) == 0:
@@ -91,7 +86,7 @@ async def download_files(c: UploadTgBot, m: Message):
 
             if (downloaded or total_length) > 2097152000:  # size less than 2gb
                 await sm.edit_text(
-                    "Cannot download files more than 2 GB because of Telegram restrictions!"
+                    "Cannot download files more than 2 GB because of Telegram restrictions!",
                 )
                 return
 
@@ -144,12 +139,16 @@ async def download_files(c: UploadTgBot, m: Message):
                 (
                     f"Downloaded to file in <u>{ms}</u> seconds.\n"
                     f"Download Speed: {human_bytes(round((total_length / ms), 2))}"
-                )
+                ),
             )
 
             LocalDB.set(f"up_{user_id}", True)
             # Log download to database
-            user_db.add_download(download_url=url, file_size=total_length, message_id=m.message_id)
+            user_db.add_download(
+                download_url=url,
+                file_size=total_length,
+                message_id=m.message_id,
+            )
 
             try:
                 file_size = path.getsize(download_file_path)
@@ -176,10 +175,7 @@ async def download_files(c: UploadTgBot, m: Message):
                 await sm.delete()
             except FilePartTooBig:
                 await sm.edit_text(
-                    (
-                        "Could not upload file!"
-                        "\nSize too big! (Larger than 2GB)"
-                    )
+                    ("Could not upload file!" "\nSize too big! (Larger than 2GB)"),
                 )
                 return
 

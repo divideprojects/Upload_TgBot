@@ -28,8 +28,7 @@ class DirectDl:
         elif ("mega.nz" or "mega.co.nz") in self.url:
             tmp = await download_file(self.url)
             name, size, link = tmp[0], tmp[1], tmp[2]
-            return (f"<a href='{link}'>{name}</a>"
-                    f"\n<b>Size: {human_bytes(size)}</b>")
+            return f"<a href='{link}'>{name}</a>" f"\n<b>Size: {human_bytes(size)}</b>"
         return ""
 
     def gdrive(self):

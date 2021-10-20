@@ -62,7 +62,7 @@ async def broadcast_(_, m: Message):
             "Broadcast Started!"
             f"\nTotal Users: {total_users}"
             "\nYou will be notified with log file when all the users are notified."
-        )
+        ),
     )
 
     start_time = time()

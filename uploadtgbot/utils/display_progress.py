@@ -12,13 +12,13 @@ from uploadtgbot.utils.constants import Constants
 
 
 async def progress_for_pyrogram(
-        current,
-        total,
-        ud_type,
-        message,
-        start,
-        user_id,
-        client,
+    current,
+    total,
+    ud_type,
+    message,
+    start,
+    user_id,
+    client,
 ):
     if not LocalDB.get(f"up_{user_id}"):
         await message.reply_text("Cancelled Upload Task!")
@@ -78,10 +78,10 @@ def time_formatter(milliseconds: int) -> str:
     hours, minutes = divmod(minutes, 60)
     days, hours = divmod(hours, 24)
     tmp = (
-            ((str(days) + "d, ") if days else "")
-            + ((str(hours) + "h, ") if hours else "")
-            + ((str(minutes) + "m, ") if minutes else "")
-            + ((str(seconds) + "s, ") if seconds else "")
-            + ((str(milliseconds) + "ms, ") if milliseconds else "")
+        ((str(days) + "d, ") if days else "")
+        + ((str(hours) + "h, ") if hours else "")
+        + ((str(minutes) + "m, ") if minutes else "")
+        + ((str(seconds) + "s, ") if seconds else "")
+        + ((str(milliseconds) + "ms, ") if milliseconds else "")
     )
     return tmp[:-2]

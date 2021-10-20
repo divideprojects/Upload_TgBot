@@ -34,7 +34,7 @@ async def str_to_a32(b):
 
 
 async def base64_url_decode(data):
-    data += "=="[(2 - len(data) * 3) % 4:]
+    data += "=="[(2 - len(data) * 3) % 4 :]
     for search_data, replace in (("-", "+"), ("_", "/"), (",", "")):
         data = data.replace(search_data, replace)
     return b64decode(data)
@@ -49,7 +49,7 @@ async def parse_url(url):
         url = url.replace(" ", "")
         file_id = findall(r"\W\w\w\w\w\w\w\w\w\W", url)[0][1:-1]
         id_index = search(file_id, url).end()
-        key = url[id_index + 1:]
+        key = url[id_index + 1 :]
         return f"{file_id}!{key}"
     elif "!" in url:
         match = findall(r"/#!(.*)", url)

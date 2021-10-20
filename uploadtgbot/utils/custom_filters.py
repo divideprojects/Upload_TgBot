@@ -55,7 +55,7 @@ async def user_check_filter(_, c: UploadTgBot, m: Message):
                 NO_JOIN_START_TEXT.format(m.from_user.first_name),
                 disable_web_page_preview=True,
                 parse_mode="markdown",
-                reply_markup=ikb([[("Join Channel", invite_link.invite_link, "url")]])
+                reply_markup=ikb([[("Join Channel", invite_link.invite_link, "url")]]),
             )
         except FloodWait as e:
             await sleep(e.x)

@@ -21,7 +21,9 @@ async def stats_bot(c: UploadTgBot, m: Message):
     return
 
 
-@UploadTgBot.on_message(filters.command("admin_stats", Vars.PREFIX_HANDLER) & filters.user(Vars.OWNER_ID))
+@UploadTgBot.on_message(
+    filters.command("admin_stats", Vars.PREFIX_HANDLER) & filters.user(Vars.OWNER_ID),
+)
 async def admin_stats_bot(c: UploadTgBot, m: Message):
     stats = await get_stats_func(c, m.from_user.id, True)
     await m.reply_text(
@@ -72,7 +74,9 @@ async def get_stats_func(c: UploadTgBot, user_id: int, admin: bool):
         )
     else:
         user_stats = MainDB(user_id).get_info()
-        total_usage = human_bytes(user_stats["total_usage"])  # Convert to human readable format
+        total_usage = human_bytes(
+            user_stats["total_usage"],
+        )  # Convert to human readable format
         total_downloads = user_stats["total_downloads"]
         plan = user_stats["plan"]
         join_date = user_stats["join_date"].strftime("%m/%d/%Y, %H:%M:%S")

@@ -1,12 +1,12 @@
-import pyromod.listen  # skipcq:PYL-W0611
 from platform import python_version
 from time import gmtime, strftime, time
 
+import pyromod.listen  # skipcq:PYL-W0611
 from pyrogram import Client, __version__
 from pyrogram.raw.all import layer
-from uploadtgbot.vars import Vars
-from uploadtgbot import LOGGER, UPTIME
 
+from uploadtgbot import LOGGER, UPTIME
+from uploadtgbot.vars import Vars
 
 # Check if MESSAGE_DUMP is correct
 if Vars.MESSAGE_DUMP == -100 or not str(Vars.MESSAGE_DUMP).startswith("-100"):
