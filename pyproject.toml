@@ -22,7 +22,7 @@ pymongo = "~=3.12.0"
 
 [tool.poetry.dev-dependencies]
 black = "~=21.10b0"
-isort = "~=5.10.0"
+isort = "~=5.10.1"
 pre-commit = "~=2.15.0"
 pyclean = "~=2.0.0"
 pylint = "~=2.11.1"
