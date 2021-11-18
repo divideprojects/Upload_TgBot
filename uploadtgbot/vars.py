@@ -1,23 +1,25 @@
-from os import environ, getcwd
+from os import getcwd
 
+from prettyconf import Configuration
+from prettyconf.loaders import EnvFile, Environment
 
-def load_var(var_name, def_value=None):
-    return environ.get(var_name, def_value)
+env_file = f"{getcwd()}/.env"
+config = Configuration(loaders=[Environment(), EnvFile(filename=env_file)])
 
 
 class Vars:
-    CACHE_TIME = int(load_var("CACHE_TIME", 5))
+    CACHE_TIME = int(config("CACHE_TIME", default=5))
     DOWN_PATH = f"{getcwd()}/uploadtgbot/downloads"
-    BOT_TOKEN = load_var("BOT_TOKEN")
-    APP_ID = int(load_var("API_ID"))
-    API_HASH = load_var("API_HASH")
-    MESSAGE_DUMP = int(load_var("MESSAGE_DUMP", "-100"))
-    PREFIX_HANDLER = load_var("PREFIX_HANDLER", "/ !").split()
-    SUPPORT_GROUP = load_var("SUPPORT_GROUP", "DivideProjectsDiscussion")
-    AUTH_CHANNEL = load_var("AUTH_CHANNEL", -1001218203939)
-    OWNER_ID = int(load_var("OWNER_ID", 1198820588))
-    DB_URI = load_var("DB_URI")
-    CAPTION = load_var("CAPTION", "By @DivideProjects")
-    VERSION = load_var("VERSION", "v1.1 - Stable")
-    BOT_USERNAME = load_var("BOT_USERNAME")
-    WORKERS = load_var("WORKERS", 8)
+    BOT_TOKEN = config("BOT_TOKEN")
+    APP_ID = int(config("API_ID"))
+    API_HASH = config("API_HASH")
+    MESSAGE_DUMP = int(config("MESSAGE_DUMP", default=-100))
+    PREFIX_HANDLER = config("PREFIX_HANDLER", default="/ !").split()
+    SUPPORT_GROUP = config("SUPPORT_GROUP", default="DivideProjectsDiscussion")
+    AUTH_CHANNEL = config("AUTH_CHANNEL", default=-1001218203939)
+    OWNER_ID = int(config("OWNER_ID", default=1198820588))
+    DB_URI = config("DB_URI")
+    CAPTION = config("CAPTION", default="By @DivideProjects")
+    VERSION = config("VERSION", default="v1.1 - Stable")
+    BOT_USERNAME = config("BOT_USERNAME")
+    WORKERS = config("WORKERS", default=8)
