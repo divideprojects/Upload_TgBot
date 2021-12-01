@@ -5,12 +5,13 @@ from pyrogram.types import CallbackQuery, Message
 from uploadtgbot.bot_class import UploadTgBot
 from uploadtgbot.db import MainDB
 from uploadtgbot.utils.constants import Constants
-from uploadtgbot.utils.custom_filters import user_check
 from uploadtgbot.utils.display_progress import human_bytes
+from uploadtgbot.utils.joinCheck import joinCheck
 from uploadtgbot.vars import Vars
 
 
-@UploadTgBot.on_message(filters.command("stats", Vars.PREFIX_HANDLER) & user_check)
+@UploadTgBot.on_message(filters.command("stats", Vars.PREFIX_HANDLER))
+@joinCheck()
 async def stats_bot(c: UploadTgBot, m: Message):
     stats = await get_stats_func(c, m.from_user.id, False)
     await m.reply_text(

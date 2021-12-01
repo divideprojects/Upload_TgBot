@@ -4,11 +4,12 @@ from pyrogram import filters
 from pyrogram.types import Message
 
 from uploadtgbot.bot_class import UploadTgBot
-from uploadtgbot.utils.custom_filters import user_check
 from uploadtgbot.utils.direct_dl import DirectDl
+from uploadtgbot.utils.joinCheck import joinCheck
 
 
-@UploadTgBot.on_message(filters.command("direct") & user_check)
+@UploadTgBot.on_message(filters.command("direct"))
+@joinCheck()
 async def direct_link(_, m: Message):
     args = m.text.split()
     if len(args) == 1:

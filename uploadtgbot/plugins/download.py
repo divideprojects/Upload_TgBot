@@ -18,8 +18,8 @@ from uploadtgbot.bot_class import UploadTgBot
 from uploadtgbot.db import LocalDB, MainDB
 from uploadtgbot.utils.caching import user_cache_check, user_cache_reload
 from uploadtgbot.utils.constants import Constants
-from uploadtgbot.utils.custom_filters import user_check
 from uploadtgbot.utils.display_progress import human_bytes, progress_for_pyrogram
+from uploadtgbot.utils.joinCheck import joinCheck
 from uploadtgbot.vars import Vars
 
 
@@ -46,7 +46,8 @@ async def get_custom_filename(link: str):
     return url, file_name
 
 
-@UploadTgBot.on_message(filters.regex(r"\bhttps?://.*\.\S+") & user_check)
+@UploadTgBot.on_message(filters.regex(r"\bhttps?://.*\.\S+"))
+@joinCheck()
 async def download_files(c: UploadTgBot, m: Message):
     user_id = m.from_user.id
     link = m.text

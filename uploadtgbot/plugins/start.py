@@ -4,13 +4,12 @@ from pyromod.helpers import ikb
 
 from uploadtgbot.bot_class import UploadTgBot
 from uploadtgbot.utils.constants import Constants
-from uploadtgbot.utils.custom_filters import user_check
+from uploadtgbot.utils.joinCheck import joinCheck
 from uploadtgbot.vars import Vars
 
 
-@UploadTgBot.on_message(
-    filters.command("start", Vars.PREFIX_HANDLER) & filters.private & user_check,
-)
+@UploadTgBot.on_message(filters.command("start", Vars.PREFIX_HANDLER) & filters.private)
+@joinCheck()
 async def start_bot(_, m: Message):
     return await m.reply_text(
         Constants.USAGE_WATERMARK_ADDER.format(m.from_user.first_name, Vars.CAPTION),
@@ -20,9 +19,8 @@ async def start_bot(_, m: Message):
     )
 
 
-@UploadTgBot.on_message(
-    filters.command("help", Vars.PREFIX_HANDLER) & filters.private & user_check,
-)
+@UploadTgBot.on_message(filters.command("help", Vars.PREFIX_HANDLER) & filters.private)
+@joinCheck()
 async def help_bot(_, m: Message):
     return await m.reply_text(
         Constants.page1_help,

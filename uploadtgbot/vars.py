@@ -23,3 +23,4 @@ class Vars:
     VERSION = config("VERSION", default="v1.1 - Stable")
     BOT_USERNAME = config("BOT_USERNAME")
     WORKERS = config("WORKERS", default=8)
+    JOIN_CHECK = config("JOIN_CHECK", default=None, cast=config.boolean)
